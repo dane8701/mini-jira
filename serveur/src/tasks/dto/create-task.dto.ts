@@ -3,7 +3,9 @@ import { ObjectId } from "mongoose";
 export class CreateTaskDto {
     name: string;
     dateCreated: Date;
-    state: string;
+    state: ObjectId;
     createdBy: ObjectId;
-    assignedTo: ObjectId
+    assignedTo: ObjectId;
+    subTasks: ObjectId[];
+    tags: ObjectId[];
 }
