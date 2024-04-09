@@ -1,0 +1,46 @@
+<div class="container" style="margin-top: 6rem;">
+    <div class="row h-100 justify-content-center align-items-center">
+      <main class="col-md-3">
+        <form [formGroup]="registerForm" class="form-signin" (ngSubmit)="submitForm()">
+          <h1 class="h3 mb-3 fw-normal text-center">{{'lbl-register' |translate}}</h1>
+            
+          <div class="form-floating">
+            <input type="fullName" formControlName="fullName" class="form-control" id="floatingInput" placeholder="">
+            <label for="floatingInput">{{'lbl-fullname' |translate}}</label>
+            <div *ngIf="registerForm.get('fullName')?.invalid && (registerForm.get('fullName')?.dirty || registerForm.get('fullName')?.touched)">
+              <small *ngIf="registerForm.get('fullName')?.errors?.['required']" class="text-danger">{{'lbl-fullname-required' |translate}}</small>
+              <small *ngIf="registerForm.get('fullName')?.errors?.['pattern']" class="text-danger">{{'lbl-fullname-valid' |translate}}</small>
+            </div>
+          </div>
+          <div class="form-floating">
+            <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">{{'lbl-email' |translate}}</label>
+            <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
+              <small *ngIf="registerForm.get('email')?.errors?.['required']" class="text-danger">{{'lbl-email-required' |translate}}</small>
+              <small *ngIf="registerForm.get('email')?.errors?.['email']" class="text-danger">{{'lbl-email-valid' |translate}}</small>
+            </div>
+          </div>
+          <div class="form-floating">
+            <input type="password" formControlName="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">{{'lbl-password' |translate}}</label>
+            <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+              <small class="text-danger" *ngIf="registerForm.get('password')?.errors?.['required']">{{'lbl-password-required' |translate}}</small>
+            </div>
+          </div>
+          <div class="form-floating">
+            <input type="password" formControlName="confirmPassword" class="form-control" id="floatingPassword" placeholder="confirmPassword">
+            <label for="floatingPassword">{{'lbl-confirm-password' |translate}}</label>
+            <div *ngIf="registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)">
+              <small class="text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">{{'lbl-confirm-password-required' |translate}}</small>
+            </div>
+            <small class="text-danger" *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.valid &&  registerForm.get('password')?.valid">{{'lbl-confirm-password-match' |translate}}</small>
+          </div>
+
+          <button class="w-100 btn btn-lg btn-primary" type="submit" [disabled]="registerForm.invalid">{{'lbl-register' |translate}}</button>
+        </form>
+        <p class="mt-5 mb-3 text-muted">&copy; 2023-2024</p>
+        <p class="mt-3">{{'lbl-already-register' |translate}} <a href="/login">{{'lbl-sign-in' |translate}}</a></p>
+      </main>
+    </div>
+  </div>
+  

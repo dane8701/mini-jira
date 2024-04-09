@@ -1,0 +1,16 @@
+<nav *ngIf="this.authSvc.isLoggedIn" class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a routerLink="/home" routerLinkActive="active" class="nav-item nav-link active">
+          {{'lbl-home' |translate}}
+        </a>
+        <a *ngIf="currentUser" [routerLink]="['/my-tasks', currentUser._id]" routerLinkActive="active" class="nav-item nav-link active">
+          {{'lbl-my-tasks' |translate}}
+        </a>
+        <button class="btn btn-outline-primary" type="button" (click)="logOut()">{{'lbl-sign-out' |translate}}</button>
+      </div>
+    </div>
+  </nav>

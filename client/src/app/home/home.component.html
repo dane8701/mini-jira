@@ -1,0 +1,55 @@
+<div class="container shadow bg-white"> 
+    <h2 class="bg-info text-white card p-2 mt-2">ReadMineV2</h2>
+    <form [formGroup]="taskForm" (ngSubmit)="submitForm()">
+        <label for="taskName">{{'lbl-task-name' |translate}}</label>
+        <input formControlName="taskName" name="taskName" class="form-control" type="text">
+        <div *ngIf="taskForm.get('taskName')?.invalid && (taskForm.get('taskName')?.dirty || taskForm.get('taskName')?.touched)">
+            <small *ngIf="taskForm.get('taskName')?.errors?.['required']" class="text-danger">{{'lbl-task-name-required' |translate}}</small>
+        </div>
+        <label for="userName">{{'lbl-assigned-to' |translate}}</label>
+        <ng-select
+                formControlName="userName"
+                name="userName">
+            <ng-option *ngFor="let user of listOfUsers" [value]="user._id">{{ user.fullName }}</ng-option>
+        </ng-select>
+        <div *ngIf="taskForm.get('userName')?.invalid && (taskForm.get('userName')?.dirty || taskForm.get('userName')?.touched)">
+            <small *ngIf="taskForm.get('userName')?.errors?.['required']" class="text-danger">{{'lbl-username-required' |translate}}</small>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit" [disabled]="taskForm.invalid">{{'lbl-add' |translate}}</button>
+    </form>
+
+    <div class="mt-3 mb-2">
+        <button type="button" class="btn btn-secondary ms-2" (click)="filterTask('In Progress')">
+            {{'lbl-in-progress' |translate}}
+          </button>
+
+          <button type="button" class="btn btn-success ms-2" (click)="filterTask('Completed')">
+            {{'lbl-completed' |translate}}
+          </button>
+
+          <button type="button" class="btn btn-primary ms-2" (click)="filterTask('All')">
+            {{'lbl-all' |translate}}
+          </button>
+    </div>
+
+    <div class="task-container mt-3 card shadow bg-light mb-4 p-2" *ngFor="let task of listOfTask; index as i">
+        <div class="form-check d-inline-flex justify-content-between">
+            <input type="checkbox" class="form-check-input"
+                id="checkbox-{{i}}" 
+                [checked]="task.state === state"
+                (change)="onChangeStateTask(task)"
+            >
+            <label class="form-check-label fs-5" for="checkbox-{{i}}" [ngClass]="{'text-decoration-line-through': task.state === state}">
+                {{ task | taskDetails | async }}
+            </label>
+            <div class="">
+                <button class="btn btn-outline-primary m-1" (click)="openModal(task)">
+                    <fa-icon icon="pen-to-square"></fa-icon>
+                </button>
+                <button class="btn btn-outline-danger m-1" (click)="onDeleteTask(task)">
+                    <fa-icon icon="delete-left"></fa-icon>
+                </button>
+            <div>
+        </div>
+    </div>
+</div>

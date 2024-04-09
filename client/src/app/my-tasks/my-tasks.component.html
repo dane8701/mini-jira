@@ -1,0 +1,43 @@
+<div class="card" style="margin: 15rem; padding: 5px;">
+    <p-toast></p-toast>
+    <p-table [value]="tasks" dataKey="name" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:30%">{{'lbl-task-name' | translate}}</th>
+                <th style="width:30%">{{'lbl-state' | translate}}</th>
+                <th style="width:20%">{{'lbl-action' | translate}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="task">
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="task.name">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{task.name}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <p-dropdown [options]="statuses" appendTo="body" [(ngModel)]="task.state"></p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{task.state}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(task)" class="p-button-rounded p-button-text" tooltip="Edit Task"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(task)" class="p-button-rounded p-button-text p-button-success mr-2" tooltip="Save Changes"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(task, ri)" class="p-button-rounded p-button-text p-button-danger" tooltip="Cancel Edit"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
