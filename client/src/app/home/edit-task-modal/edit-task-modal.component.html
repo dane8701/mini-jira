@@ -11,9 +11,23 @@
       <label>{{'lbl-state' |translate}}</label>
       <ng-select
         bindLabel="name"
-        bindValue="_id"
         autofocus
         [items]="TaskStates" [(ngModel)]="currentTask.state"></ng-select>
+    </div>
+    <div class="form-group">
+      <label>{{'lbl-project' |translate}}</label>
+      <ng-select
+        bindLabel="title"
+        autofocus
+        [items]="listOfProjects" [(ngModel)]="currentTask.project"></ng-select>
+    </div>
+    <div class="form-group">
+      <label>Tags</label>
+      <ng-select
+        [multiple]="true"
+        bindLabel="name"
+        autofocus
+        [items]="listOfTags" [(ngModel)]="currentTask.tags"></ng-select>
     </div>
   </div>
   <div class="modal-footer">

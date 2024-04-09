@@ -52,7 +52,7 @@ export class LoginComponent {
             this.authSvc.logIn();
             sessionStorage.setItem('user', JSON.stringify(response));
             localStorage.setItem("userLocale", this.selectedLocal);
-            this.router.navigate(['home']);
+            this.router.navigate(['project']);
           } else {
             this.messagerieSvc.add({ severity: 'error', summary: 'Error', detail: 'email or password is wrong' });
           }

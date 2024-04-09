@@ -8,4 +8,5 @@ export class CreateTaskDto {
     assignedTo: ObjectId;
     subTasks: ObjectId[];
     tags: ObjectId[];
+    project: ObjectId;
 }

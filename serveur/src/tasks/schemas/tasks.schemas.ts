@@ -23,6 +23,9 @@ export class Task extends Document {
     
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Tag' }], default: [] })
     tags: Types.ObjectId[];
+    
+    @Prop({ type: Types.ObjectId, ref: 'Project' })
+    project: Types.ObjectId; 
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);

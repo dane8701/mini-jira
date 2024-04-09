@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { User } from '../models/interfaces';
 import { HttpClientApiService } from './http-client-api.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export enum AuthUrls {
     REGISTER = 'http://localhost:3000/users/register',
@@ -15,13 +15,15 @@ export enum AuthUrls {
 
 export class AuthService {
     private apiSvc: HttpClientApiService;
-    public isLoggedIn: boolean = false;
+    private loggedIn: BehaviorSubject<boolean>;
 
   constructor() { 
     this.apiSvc = inject(HttpClientApiService);
-    if(sessionStorage.getItem('user')){
-      this.isLoggedIn = true;
-    }
+    this.loggedIn = new BehaviorSubject<boolean>(sessionStorage.getItem('user') ? true : false);
+  }
+
+  get isLoggedIn(): Observable<boolean> {
+    return this.loggedIn.asObservable();
   }
 
   registerUser(user: User): Observable<User> | null {
@@ -42,10 +44,10 @@ export class AuthService {
   }
 
   logOut(): void {
-    this.isLoggedIn = false;
+    this.loggedIn.next(false);
   }
 
   logIn(): void {
-    this.isLoggedIn = true
+    this.loggedIn.next(true);
   }
 }

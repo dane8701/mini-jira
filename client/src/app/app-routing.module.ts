@@ -6,6 +6,7 @@ import { RegisterComponent } from './register/register.component';
 import { authGuard } from './guards/auth.guard';
 import { MyTasksComponent } from './my-tasks/my-tasks.component';
 import { ProjectComponent } from './project/project.component';
+import { MyProjectsComponent } from './my-projects/my-projects.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,7 +14,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'project', component: ProjectComponent, canActivate: [authGuard] },
   { path: 'my-tasks/:id', component: MyTasksComponent, canActivate: [authGuard] },
-  { path: '', redirectTo: '/project', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({

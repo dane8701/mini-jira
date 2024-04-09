@@ -15,6 +15,26 @@
         <div *ngIf="taskForm.get('userName')?.invalid && (taskForm.get('userName')?.dirty || taskForm.get('userName')?.touched)">
             <small *ngIf="taskForm.get('userName')?.errors?.['required']" class="text-danger">{{'lbl-username-required' |translate}}</small>
         </div>
+        <label for="project">{{'lbl-project' |translate}}</label>
+        <ng-select
+                formControlName="project"
+                name="project">
+            <ng-option *ngFor="let proj of listOfProjects" [value]="proj">{{ proj.title }}</ng-option>
+        </ng-select>
+        <div *ngIf="taskForm.get('project')?.invalid && (taskForm.get('project')?.dirty || taskForm.get('project')?.touched)">
+            <small *ngIf="taskForm.get('project')?.errors?.['required']" class="text-danger">{{'lbl-project-required' |translate}}</small>
+        </div>
+        <label for="project">Tags</label>
+        <ng-select
+                placeholder="Select Tags"
+                [multiple]="true"
+                formControlName="tags"
+                name="tags">
+            <ng-option *ngFor="let tag of listOfTags" [value]="tag">{{ tag.name }}</ng-option>
+        </ng-select>
+        <div *ngIf="taskForm.get('tags')?.invalid && (taskForm.get('tags')?.dirty || taskForm.get('tags')?.touched)">
+            <small *ngIf="taskForm.get('tags')?.errors?.['required']" class="text-danger">{{'lbl-tags-required' |translate}}</small>
+        </div>
         <button class="btn btn-primary mt-3" type="submit" [disabled]="taskForm.invalid">{{'lbl-add' |translate}}</button>
     </form>
 
@@ -30,6 +50,20 @@
           <button type="button" class="btn btn-primary ms-2" (click)="filterTask('All')">
             {{'lbl-all' |translate}}
           </button>
+    </div>
+
+    <div class="mt-3 mb-2">
+        <label>Filtre sur les projets</label>
+        <button *ngFor="let project of listOfProjects" type="button" class="btn btn-secondary ms-2" (click)="filterTaskByProject(project)">
+            {{ project.title }}
+        </button>
+    </div>
+
+    <div class="mt-3 mb-2">
+        <label>Filtre sur les tags</label>
+        <button *ngFor="let tag of listOfTags" type="button" class="btn btn-secondary ms-2" (click)="filterTaskByTag(tag)">
+            {{ tag.name }}
+        </button>
     </div>
 
     <div class="task-container mt-3 card shadow bg-light mb-4 p-2" *ngFor="let task of listOfTask; index as i">

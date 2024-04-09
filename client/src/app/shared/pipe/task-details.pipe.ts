@@ -20,8 +20,9 @@ export class TaskDetailsPipe implements PipeTransform {
     return this.authSvc.getUser(task.assignedTo._id).pipe(
       switchMap(user => {
         const assignedToStr = `Assigned To: ${user.fullName}`;
+        const project = `For the project: ${task.project.title}`;
         return this.getState(task.state).pipe(
-          switchMap(state => of(`${task.name} - ${state.name} - ${assignedToStr}`))
+          switchMap(state => of(`${task.name} - ${state.name} - ${assignedToStr} - ${project}`))
         );
       })
     );

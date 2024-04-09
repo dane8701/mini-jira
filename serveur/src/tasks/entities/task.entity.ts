@@ -8,4 +8,5 @@ export class Task {
     assignedTo: ObjectId;
     subTasks: ObjectId[];
     tags: ObjectId[];
+    project: ObjectId;
 }
