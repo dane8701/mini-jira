@@ -10,7 +10,10 @@
         <a *ngIf="currentUser" [routerLink]="['/my-tasks', currentUser._id]" routerLinkActive="active" class="nav-item nav-link active">
           {{'lbl-my-tasks' |translate}}
         </a>
-        <button class="btn btn-outline-primary" type="button" (click)="logOut()">{{'lbl-sign-out' |translate}}</button>
+        <a *ngIf="currentUser" routerLink="/project" routerLinkActive="active" class="nav-item nav-link active">
+          {{'lbl-my-projects' |translate}}
+        </a>
+        <button *ngIf="currentUser" class="btn btn-outline-primary" type="button" (click)="logOut()">{{'lbl-sign-out' |translate}}</button>
       </div>
     </div>
   </nav>

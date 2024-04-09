@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Status, Task, User } from '../shared/models/interfaces';
+import { Project, Status, Tag, Task, User } from '../shared/models/interfaces';
 import { TaskState } from '../shared/models/enums';
 import { TaskService } from '../shared/services/task.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,8 @@ import { AuthService } from '../shared/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { StatusService } from '../shared/services/status.service';
+import { ProjectService } from '../shared/services/project.service';
+import { TagService } from '../shared/services/tag.service';
 
 @Component({
   selector: 'app-home',
@@ -21,26 +23,36 @@ export class HomeComponent implements OnInit {
   private formBuilder: FormBuilder;
   private translateSvc: TranslateService;
   private statusSvc: StatusService;
+  private projectSvc: ProjectService;
+  private tagSvc: TagService;
   
   constructor(private taskSvc: TaskService, private modalService: NgbModal){
     this.authSvc = inject(AuthService);
     this.formBuilder = inject(FormBuilder);
     this.translateSvc = inject(TranslateService);
-    this.statusSvc = inject(StatusService)
+    this.statusSvc = inject(StatusService);
+    this.projectSvc = inject(ProjectService)
+    this.tagSvc = inject(TagService)
     this.taskSvc.taskSubject.subscribe(task => this.getTasks());
   }
 
   listOfTask: Task[] = [];
   listOfUsers: User[] = [];
   listOfStatus: Status[] = [];
+  listOfProjects: Project[] = [];
+  listOfTags: Tag[] = [];
 
   ngOnInit(): void {
 
     this.authSvc.getUsers().subscribe(value => this.listOfUsers = value);
     this.statusSvc.getAll().subscribe(data => this.listOfStatus = data);
+    this.projectSvc.findAll().subscribe(data => this.listOfProjects = data);
+    this.tagSvc.findAll().subscribe(data => this.listOfTags = data);
     this.taskForm = this.formBuilder.group({
       taskName: ['', Validators.required],
-      userName: ['', Validators.required]
+      userName: ['', Validators.required],
+      project: ['', Validators.required],
+      tags: [[], Validators.required],
     });
   }
 
@@ -119,6 +131,22 @@ export class HomeComponent implements OnInit {
     console.log(this.listOfTask)
   }
 
+  filterTaskByProject(project: Project): void {
+    this.getTasks();
+    setTimeout(() => {
+      this.listOfTask = this.listOfTask.filter(task => task.project._id === project._id);
+    }, 150)
+  }
+
+  filterTaskByTag(tag: Tag): void {
+    this.getTasks();
+    setTimeout(() => {
+      this.listOfTask = this.listOfTask.filter(task => {
+        return task.tags.some(t => t._id === tag._id);
+      });
+    }, 150);
+  }
+
   submitForm(){
     const progressState = this.listOfStatus.find(el => el.name === "Progress");
     const completedState = this.listOfStatus.find(el => el.name === "Completed");
@@ -129,7 +157,7 @@ export class HomeComponent implements OnInit {
     }
 
     if (this.taskForm.valid) {
-      const { taskName, userName } = this.taskForm.value;
+      const { taskName, userName, project, tags } = this.taskForm.value;
       console.log('Form submitted successfully!', this.taskForm.value);
       // Retrieve the item from session storage
       const storedItem = sessionStorage.getItem('user');
@@ -153,7 +181,9 @@ export class HomeComponent implements OnInit {
             dateCreated: new Date(),
             state: progressState,
             createdBy: user,
-            assignedTo: res
+            assignedTo: res,
+            project: project,
+            tags: tags
           } as Task;
 
           this.taskSvc.add(task);

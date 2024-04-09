@@ -6,6 +6,9 @@ export interface Task {
   state: Status,
   createdBy: User,
   assignedTo: User,
+  tags: Tag[],
+  subTasks: Task[],
+  project: Project
   __v: number
 }
 

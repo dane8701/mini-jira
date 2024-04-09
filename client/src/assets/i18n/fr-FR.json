@@ -32,5 +32,7 @@
     "lbl-home": "Accueil",
     "lbl-my-tasks": "Mes tâches",
     "lbl-sign-out": "Se déconnecter",
-    "lbl-action": "Actions"
+    "lbl-action": "Actions",
+    "lbl-project": "Pour le projet",
+    "lbl-my-projects": "Projet"
 }

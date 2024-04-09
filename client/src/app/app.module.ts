@@ -110,6 +110,7 @@ import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageService } from 'primeng/api';
 import { ProjectComponent } from './project/project.component';
+import { MyProjectsComponent } from './my-projects/my-projects.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) : TranslateHttpLoader {
@@ -126,7 +127,8 @@ export function HttpLoaderFactory(http: HttpClient) : TranslateHttpLoader {
     HeaderComponent,
     MyTasksComponent,
     TaskDetailsPipe,
-    ProjectComponent
+    ProjectComponent,
+    MyProjectsComponent
   ],
   imports: [
     BrowserModule,
