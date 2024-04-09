@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { MessageService, SelectItem } from 'primeng/api';
-import { Task } from '../shared/models/interfaces';
+import { Status, Task } from '../shared/models/interfaces';
 import { TaskService } from '../shared/services/task.service';
 import { ActivatedRoute } from '@angular/router';
 import { TaskState } from '../shared/models/enums';
+import { StatusService } from '../shared/services/status.service';
 
 @Component({
   selector: 'app-my-tasks',
@@ -13,16 +14,18 @@ import { TaskState } from '../shared/models/enums';
 export class MyTasksComponent {
   tasks!: Task[];
   userId: string = "";
-  statuses!: SelectItem<TaskState>[];
+  statuses: SelectItem<Status>[] = [];
 
   private route: ActivatedRoute;
   private taskSvc: TaskService;
+  private statusSvc: StatusService;
   private messagerieSvc: MessageService;
 
   constructor() {
     this.route = inject(ActivatedRoute);
     this.taskSvc = inject(TaskService);
     this.messagerieSvc = inject(MessageService);
+    this.statusSvc = inject(StatusService);
   }
 
     clonedTasks: { [s: string]: Task } = {};
@@ -33,10 +36,15 @@ export class MyTasksComponent {
       });
       this.taskSvc.getTasksAssignedToUser(this.userId).subscribe((data) => (this.tasks = data));
 
-      this.statuses = [
-        { label: 'In Progress', value: TaskState.InProgress },
-        { label: 'Completed', value: TaskState.Completed }
-      ];
+      this.statusSvc.getAll().subscribe((data) => {
+        data.forEach(state => {
+          const stateToPush = {
+            label: state.name,
+            value: state
+          }
+          this.statuses.push(stateToPush)
+        })
+      });
     }
 
     onRowEditInit(task: Task) {

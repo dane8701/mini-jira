@@ -10,9 +10,6 @@ export class Project extends Document {
     @Prop({ required: true })
     description: string;
   
-    @Prop({ required: true })
-    priority: string;
-  
     @Prop({ type: Date, required: true })
     dateCreated: Date;
   

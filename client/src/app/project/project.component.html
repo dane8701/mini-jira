@@ -1,0 +1,44 @@
+<div class="container mt-5">
+    <h2>Create Project</h2>
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" formControlName="title" required>
+        <div *ngIf="projectForm.get('title')?.touched && projectForm.get('title')?.invalid" class="invalid-feedback">
+          Title is required.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" formControlName="description" rows="3" required></textarea>
+        <div *ngIf="projectForm.get('description')?.touched && projectForm.get('description')?.invalid" class="invalid-feedback">
+          Description is required.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="priority" class="form-label">Status</label>
+        <ng-select [items]="listOfStatus"
+               bindLabel="name"
+               bindValue="_id"
+               placeholder="Select status"
+               formControlName="status">
+        </ng-select>
+      </div>
+      <div class="mb-3">
+        <label for="dateExpiration" class="form-label">Date Expiration</label>
+        <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
+      </div>
+      <div class="mb-3">
+        <label for="tags" class="form-label">Tags</label>
+        <ng-select [items]="tags"
+               bindLabel="name"
+               bindValue="_id"
+               placeholder="Select tags"
+               [multiple]="true"
+               formControlName="tags">
+        </ng-select>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  

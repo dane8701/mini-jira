@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Task, User } from '../shared/models/interfaces';
+import { Status, Task, User } from '../shared/models/interfaces';
 import { TaskState } from '../shared/models/enums';
 import { TaskService } from '../shared/services/task.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { StatusService } from '../shared/services/status.service';
 
 @Component({
   selector: 'app-home',
@@ -19,25 +20,37 @@ export class HomeComponent implements OnInit {
   taskForm!: FormGroup;
   private formBuilder: FormBuilder;
   private translateSvc: TranslateService;
+  private statusSvc: StatusService;
   
   constructor(private taskSvc: TaskService, private modalService: NgbModal){
     this.authSvc = inject(AuthService);
     this.formBuilder = inject(FormBuilder);
     this.translateSvc = inject(TranslateService);
+    this.statusSvc = inject(StatusService)
     this.taskSvc.taskSubject.subscribe(task => this.getTasks());
   }
 
   listOfTask: Task[] = [];
   listOfUsers: User[] = [];
-  state: TaskState = TaskState.Completed;
+  listOfStatus: Status[] = [];
 
   ngOnInit(): void {
-    this.authSvc.getUsers().subscribe(value => this.listOfUsers = value);
 
+    this.authSvc.getUsers().subscribe(value => this.listOfUsers = value);
+    this.statusSvc.getAll().subscribe(data => this.listOfStatus = data);
     this.taskForm = this.formBuilder.group({
       taskName: ['', Validators.required],
       userName: ['', Validators.required]
     });
+  }
+
+  isProgress(task: Task): boolean {
+    const progressState = this.listOfStatus.find(el => el.name === "Progress");
+    if (progressState && progressState._id === task.state._id) {
+       return true;
+    } else {
+      return false;
+    }
   }
 
   getTasks(): void{
@@ -49,14 +62,22 @@ export class HomeComponent implements OnInit {
   }
 
   onChangeStateTask(task: Task) : void {
+    const progressState = this.listOfStatus.find(el => el.name === "Progress");
+    const completedState = this.listOfStatus.find(el => el.name === "Completed");
+
+    if (!progressState || !completedState) {
+      console.log('Required states not found in the state array');
+      return;
+    }
+
     this.listOfTask.forEach(t => {
-      if(JSON.stringify(t) === JSON.stringify(task)){
-        if(t.state === TaskState.InProgress){
-          t.state = TaskState.Completed;
+      if(t._id === task._id){
+        if(t.state._id === progressState?._id){
+          t.state = completedState;
           this.taskSvc.update(t);
         }
         else{
-          t.state = TaskState.InProgress;
+          t.state = progressState;
           this.taskSvc.update(t);
         }
       }
@@ -78,11 +99,19 @@ export class HomeComponent implements OnInit {
   filterTask(state: string): void {
     this.getTasks();
 
+    const progressState = this.listOfStatus.find(el => el.name === "Progress");
+    const completedState = this.listOfStatus.find(el => el.name === "Completed");
+
+    if (!progressState || !completedState) {
+      console.log('Required states not found in the state array');
+      return;
+    }
+
     setTimeout(() => {
       if(state == 'In Progress')
-        this.listOfTask = this.listOfTask.filter(task => task.state === TaskState.InProgress);
+        this.listOfTask = this.listOfTask.filter(task => task.state._id === progressState._id);
       else if(state == 'Completed')
-        this.listOfTask = this.listOfTask.filter(task => task.state === TaskState.Completed);
+        this.listOfTask = this.listOfTask.filter(task => task.state._id === completedState._id);
       else
         this.getTasks(); // Default behaviour
     }, 150)
@@ -91,6 +120,14 @@ export class HomeComponent implements OnInit {
   }
 
   submitForm(){
+    const progressState = this.listOfStatus.find(el => el.name === "Progress");
+    const completedState = this.listOfStatus.find(el => el.name === "Completed");
+
+    if (!progressState || !completedState) {
+      console.log('Required states not found in the state array');
+      return;
+    }
+
     if (this.taskForm.valid) {
       const { taskName, userName } = this.taskForm.value;
       console.log('Form submitted successfully!', this.taskForm.value);
@@ -114,9 +151,9 @@ export class HomeComponent implements OnInit {
           let task = {
             name: taskName,
             dateCreated: new Date(),
-            state: TaskState.InProgress,
-            createdBy: user._id,
-            assignedTo: res._id
+            state: progressState,
+            createdBy: user,
+            assignedTo: res
           } as Task;
 
           this.taskSvc.add(task);

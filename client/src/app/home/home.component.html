@@ -36,10 +36,10 @@
         <div class="form-check d-inline-flex justify-content-between">
             <input type="checkbox" class="form-check-input"
                 id="checkbox-{{i}}" 
-                [checked]="task.state === state"
+                [checked]="!isProgress(task)"
                 (change)="onChangeStateTask(task)"
             >
-            <label class="form-check-label fs-5" for="checkbox-{{i}}" [ngClass]="{'text-decoration-line-through': task.state === state}">
+            <label class="form-check-label fs-5" for="checkbox-{{i}}" [ngClass]="{'text-decoration-line-through': !isProgress(task)}">
                 {{ task | taskDetails | async }}
             </label>
             <div class="">

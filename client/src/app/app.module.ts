@@ -109,6 +109,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageService } from 'primeng/api';
+import { ProjectComponent } from './project/project.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) : TranslateHttpLoader {
@@ -124,7 +125,8 @@ export function HttpLoaderFactory(http: HttpClient) : TranslateHttpLoader {
     RegisterComponent,
     HeaderComponent,
     MyTasksComponent,
-    TaskDetailsPipe
+    TaskDetailsPipe,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,

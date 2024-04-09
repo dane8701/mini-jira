@@ -63,7 +63,7 @@ export class TasksService {
 
 
   async findAssignedTasks(userId: string): Promise<Task[]> {
-    return await this.taskModel.find({ assignedTo: userId }).exec();
+    return await this.taskModel.find({ "assignedTo._id": userId }).exec();
   }
 
   async addSubTask(taskId: string, subTaskId: string): Promise<Task> {

@@ -10,9 +10,10 @@
     <div class="form-group">
       <label>{{'lbl-state' |translate}}</label>
       <ng-select
-       bindLabel="name"
-      autofocus
-      bindValue="id" [items]="TaskStates" [(ngModel)]="currentTask.state"></ng-select>
+        bindLabel="name"
+        bindValue="_id"
+        autofocus
+        [items]="TaskStates" [(ngModel)]="currentTask.state"></ng-select>
     </div>
   </div>
   <div class="modal-footer">
