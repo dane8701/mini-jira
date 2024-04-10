@@ -6,12 +6,14 @@ import { User } from './entities/user.entity';
 import { UserDocument } from './schemas/users.schemas';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { MailController } from 'src/mailer/mailer.controller';
 
 @Injectable()
 export class UsersService {
 
-  constructor(@InjectModel(User.name) private userModel: 
-  Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private mailController: MailController) {}
   
   async register(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await this.hashPassword(createUserDto.password);
@@ -20,6 +22,13 @@ export class UsersService {
       email: createUserDto.email,
       password: hashedPassword,
     });
+    const mail = {
+      to: newUser.email,
+      subject: "Task Changes",
+      text: 'Welcome on ReadMineV2'
+    };
+    this.mailController.sendEmail(mail);
+    
     return await newUser.save();
   }
 

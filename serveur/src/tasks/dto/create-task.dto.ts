@@ -1,11 +1,13 @@
 import { ObjectId } from "mongoose";
+import { Status } from "src/status/entities/status.entity";
+import { User } from "src/users/entities/user.entity";
 
 export class CreateTaskDto {
     name: string;
     dateCreated: Date;
-    state: ObjectId;
-    createdBy: ObjectId;
-    assignedTo: ObjectId;
+    state: Status;
+    createdBy: User;
+    assignedTo: any;
     subTasks: ObjectId[];
     tags: ObjectId[];
     project: ObjectId;

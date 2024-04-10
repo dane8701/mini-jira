@@ -5,7 +5,7 @@ export class Task {
     dateCreated: Date;
     state: ObjectId;
     createdBy: ObjectId;
-    assignedTo: ObjectId;
+    assignedTo: any;
     subTasks: ObjectId[];
     tags: ObjectId[];
     project: ObjectId;

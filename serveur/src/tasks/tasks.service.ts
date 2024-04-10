@@ -5,15 +5,25 @@ import { Task } from './entities/task.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 const { ObjectId } = require('mongodb');
+import { UsersController } from 'src/users/users.controller';
+import { MailController } from 'src/mailer/mailer.controller';
 
 @Injectable()
 export class TasksService {
 
-  constructor(@InjectModel(Task.name) private taskModel: 
-  Model<Task>) {}
+  constructor(
+    @InjectModel(Task.name) private taskModel: Model<Task>,
+    private usersController: UsersController,
+    private mailController: MailController
+  ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const newTask = new this.taskModel(createTaskDto);
+    const mail = {
+      to: createTaskDto.assignedTo.email,
+      subject: "A new task has been assigned to you",
+      text: "The task " + createTaskDto.name + " has been assigned to you !"
+    }
     return newTask.save();
   }
 
@@ -41,20 +51,34 @@ export class TasksService {
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    const user = await this.usersController.findOne(updateTaskDto.assignedTo._id);
+    const mail = {
+      to: user.email,
+      subject: "Task Changes",
+      text: 'Your task status changes to ' + updateTaskDto.state.name
+    }
     const updatedTask = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true })
                                                .populate('state')
                                                .populate('createdBy')
                                                .populate('assignedTo')
                                                .populate('subTasks')
                                                .populate('tags');
-    if (!updatedTask) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
-    }
+    this.mailController.sendEmail(mail)
+    // if (!updatedTask) {
+    //   throw new NotFoundException(`Task with ID ${id} not found`);
+    // }
     return updatedTask;
   }
 
   async remove(id: string): Promise<Task> {
     const task = await this.taskModel.findByIdAndRemove(id);
+    const mail = {
+      to: task.assignedTo.email,
+      subject: "Your task has been deleted",
+      text: "The task " + task.name + " has been deleted !"
+    };
+    this.mailController.sendEmail(mail);
+     
     if (!task) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }

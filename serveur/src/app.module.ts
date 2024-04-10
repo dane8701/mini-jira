@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TagsModule } from './tags/tags.module';
 import { StatusModule } from './status/status.module';
+import { mailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StatusModule } from './status/status.module';
     ProjectsModule,
     TagsModule,
     StatusModule,
+    mailerModule
   ],
   controllers: [AppController],
   providers: [AppService],
