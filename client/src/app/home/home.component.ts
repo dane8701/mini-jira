@@ -50,9 +50,11 @@ export class HomeComponent implements OnInit {
     this.tagSvc.findAll().subscribe(data => this.listOfTags = data);
     this.taskForm = this.formBuilder.group({
       taskName: ['', Validators.required],
+      dateExpiration: [new Date(), [Validators.required]],
       userName: ['', Validators.required],
       project: ['', Validators.required],
       tags: [[], Validators.required],
+      subTasks: [[], Validators.required],
     });
   }
 
@@ -100,6 +102,7 @@ export class HomeComponent implements OnInit {
     const modalRef = this.modalService.open(EditTaskModalComponent, { size: 'xs' });
     modalRef.componentInstance.onChangeTask(task);
     modalRef.componentInstance.taskUpdated.subscribe((task: Task) => {
+      console.log(task)
       this.onTaskUpdated(task);
     });
   }
@@ -157,7 +160,7 @@ export class HomeComponent implements OnInit {
     }
 
     if (this.taskForm.valid) {
-      const { taskName, userName, project, tags } = this.taskForm.value;
+      const { taskName, dateExpiration, userName, project, tags, subTasks } = this.taskForm.value;
       console.log('Form submitted successfully!', this.taskForm.value);
       // Retrieve the item from session storage
       const storedItem = sessionStorage.getItem('user');
@@ -178,12 +181,14 @@ export class HomeComponent implements OnInit {
 
           let task = {
             name: taskName,
+            dateExpiration: dateExpiration,
             dateCreated: new Date(),
             state: progressState,
             createdBy: user,
             assignedTo: res,
             project: project,
-            tags: tags
+            tags: tags,
+            subTasks: subTasks
           } as Task;
 
           this.taskSvc.add(task);

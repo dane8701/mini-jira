@@ -6,8 +6,11 @@ export class Task extends Document {
     @Prop({required: true})
     name: string;
 
-    @Prop({required: true, unique: true})
+    @Prop({required: true})
     dateCreated: string;
+
+    @Prop({required: true})
+    dateExpiration: Date;
 
     @Prop({ type: Types.ObjectId, ref: 'Status' })
     state: Types.ObjectId;
@@ -20,7 +23,7 @@ export class Task extends Document {
 
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Task' }], default: [] })
     subTasks: Types.ObjectId[];
-    
+
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Tag' }], default: [] })
     tags: Types.ObjectId[];
     

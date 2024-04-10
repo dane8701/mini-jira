@@ -3,12 +3,13 @@ export interface Task {
   _id: string
   name: string,
   dateCreated: Date,
+  dateExpiration: Date,
   state: Status,
   createdBy: User,
   assignedTo: User,
   tags: Tag[],
   subTasks: Task[],
-  project: Project
+  project: Project,
   __v: number
 }
 

@@ -6,6 +6,10 @@
         <div *ngIf="taskForm.get('taskName')?.invalid && (taskForm.get('taskName')?.dirty || taskForm.get('taskName')?.touched)">
             <small *ngIf="taskForm.get('taskName')?.errors?.['required']" class="text-danger">{{'lbl-task-name-required' |translate}}</small>
         </div>
+        <div class="mb-3">
+            <label for="dateExpiration" class="form-label">Date d'échéance</label>
+            <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" name="dateExpiration" required>
+        </div>
         <label for="userName">{{'lbl-assigned-to' |translate}}</label>
         <ng-select
                 formControlName="userName"
@@ -31,6 +35,14 @@
                 formControlName="tags"
                 name="tags">
             <ng-option *ngFor="let tag of listOfTags" [value]="tag">{{ tag.name }}</ng-option>
+        </ng-select>
+        <label for="project">Tasks</label>
+        <ng-select
+                placeholder="Select sub-tasks"
+                [multiple]="true"
+                formControlName="subTasks"
+                name="subTasks">
+            <ng-option *ngFor="let task of listOfTask" [value]="task">{{ task.name }}</ng-option>
         </ng-select>
         <div *ngIf="taskForm.get('tags')?.invalid && (taskForm.get('tags')?.dirty || taskForm.get('tags')?.touched)">
             <small *ngIf="taskForm.get('tags')?.errors?.['required']" class="text-danger">{{'lbl-tags-required' |translate}}</small>

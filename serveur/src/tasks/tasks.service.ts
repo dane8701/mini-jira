@@ -19,6 +19,7 @@ export class TasksService {
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const newTask = new this.taskModel(createTaskDto);
+    console.log(newTask)
     const mail = {
       to: createTaskDto.assignedTo.email,
       subject: "A new task has been assigned to you",
@@ -29,21 +30,21 @@ export class TasksService {
 
   async findAll(): Promise<Task[]> {
     return this.taskModel.find()
-                         .populate('state')
-                         .populate('createdBy')
-                         .populate('assignedTo')
-                         .populate('subTasks')
-                         .populate('tags')
-                         .exec();
+      .populate('state')
+      .populate('createdBy')
+      .populate('assignedTo')
+      .populate('subTasks')
+      .populate('tags')
+      .exec();
   }
 
   async findOne(id: string): Promise<Task> {
     const task = await this.taskModel.findById(id)
-                                     .populate('state')
-                                     .populate('createdBy')
-                                     .populate('assignedTo')
-                                     .populate('subTasks')
-                                     .populate('tags');
+      .populate('state')
+      .populate('createdBy')
+      .populate('assignedTo')
+      .populate('subTasks')
+      .populate('tags');
     if (!task) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
@@ -58,11 +59,11 @@ export class TasksService {
       text: 'Your task status changes to ' + updateTaskDto.state.name
     }
     const updatedTask = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true })
-                                               .populate('state')
-                                               .populate('createdBy')
-                                               .populate('assignedTo')
-                                               .populate('subTasks')
-                                               .populate('tags');
+      .populate('state')
+      .populate('createdBy')
+      .populate('assignedTo')
+      .populate('subTasks')
+      .populate('tags');
     this.mailController.sendEmail(mail)
     // if (!updatedTask) {
     //   throw new NotFoundException(`Task with ID ${id} not found`);

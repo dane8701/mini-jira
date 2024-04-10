@@ -5,6 +5,7 @@ import { Project, Status, Tag, Task } from 'src/app/shared/models/interfaces';
 import { ProjectService } from 'src/app/shared/services/project.service';
 import { StatusService } from 'src/app/shared/services/status.service';
 import { TagService } from 'src/app/shared/services/tag.service';
+import { TaskService } from 'src/app/shared/services/task.service';
 
 @Component({
   selector: 'app-edit-task-modal',
@@ -17,14 +18,16 @@ export class EditTaskModalComponent implements OnInit {
   TaskStates: Status[] = [];
   listOfProjects: Project[] = [];
   listOfTags: Tag[] = [];
+  listOfTasks: Task[] = [];
 
-  constructor(public activeModal: NgbActiveModal, private statusSvc: StatusService, private projectSvc: ProjectService, private tagSvc: TagService){}
+  constructor(public activeModal: NgbActiveModal, private statusSvc: StatusService, private projectSvc: ProjectService, private tagSvc: TagService, private taskSvc: TaskService){}
 
   ngOnInit(): void {
-    console.log(this.currentTask)
+    console.log(this.currentTask.dateExpiration)
     this.statusSvc.getAll().subscribe(data => this.TaskStates = data);
     this.projectSvc.findAll().subscribe(data => this.listOfProjects = data);
     this.tagSvc.findAll().subscribe(data => this.listOfTags = data);
+    this.taskSvc.getAll().subscribe(data => this.listOfTasks = data);
   }
 
   onChangeTask(task: Task): void{
